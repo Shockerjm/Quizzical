@@ -1,33 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import getApi from './hooks/getApi.jsx'
+import he from 'he'
 
 function App() {
-  const [count, setCount] = useState(0)
+const api = 'https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple'
+const { data, loading, error } = getApi(api)
 
+if (loading) {
+  return <p>Loading...</p>;
+}
+
+if (error) {
+  return <p>Error: {error.message}</p>;
+}
+
+console.log(data.results)
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {data && (
+        <ul>
+          {data.results.map((item) => (
+            <li key={item.question}>{he.decode(item.question)}</li>
+          ))}
+        </ul>
+      )}
     </>
   )
 }
