@@ -18,7 +18,7 @@ function shuffleArray(questions) {
     const j = Math.floor(Math.random() * (i + 1));
     [questions[i], questions[j]] = [questions[j], questions[i]];
   }
-  return questions.map(item => <p>item</p>)
+  return answers(questions)
 }
 
 function getQuestionsArray( questionData ) {
@@ -28,6 +28,13 @@ function getQuestionsArray( questionData ) {
     questionsArr.push(item)
   })
   shuffleArray(questionsArr)
+}
+
+function answers( ans ) {
+  ans.map((item) => {
+    console.log(item)
+    return <li key={item}>{he.decode(item)}</li>
+  })
 }
 
 // const allQuestions = getQuestionsArray()
@@ -40,7 +47,7 @@ function getQuestionsArray( questionData ) {
           {data.results.map((item) => (
             <>
               <div key={item.question}>{he.decode(item.question)}</div>
-              {getQuestionsArray(item)}
+              <div>{getQuestionsArray(item)}</div>
             </>
           ))}
         </ul>
