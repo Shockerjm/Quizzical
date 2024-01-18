@@ -13,44 +13,38 @@ if (error) {
   return <p>Error: {error.message}</p>;
 }
 
-function shuffleArray(questions) {
-  for (let i = questions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [questions[i], questions[j]] = [questions[j], questions[i]];
-  }
-  return answers(questions)
-}
+const group =  data.results.map((item) => {
+    const ansArr = []
+    ansArr.push(he.decode(item.correct_answer))
 
-function getQuestionsArray( questionData ) {
-  const questionsArr = []
-  questionsArr.push(questionData.correct_answer)
-  questionData.incorrect_answers.forEach((item) => {
-    questionsArr.push(item)
+    item.incorrect_answers.forEach((ans) => {
+      ansArr.push(he.decode(ans))
+    })
+
+    for (let i = ansArr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [ansArr[i], ansArr[j]] = [ansArr[j], ansArr[i]];
+    }
+
+    return (
+      <>
+        <div key={item.question}>{he.decode(item.question)}</div>
+        {ansArr.map((ans) => {
+          return <p key={ans}>{ans}</p>
+        })}
+      </>
+      
+    )
+    
   })
-  shuffleArray(questionsArr)
-}
 
-function answers( ans ) {
-  ans.map((item) => {
-    console.log(item)
-    return <li key={item}>{he.decode(item)}</li>
-  })
-}
-
-// const allQuestions = getQuestionsArray()
-
-// console.log(data.results)
   return (
     <div className={hide ? 'hide' : ''}>
       {data && (
-        <ul>
-          {data.results.map((item) => (
-            <>
-              <div key={item.question}>{he.decode(item.question)}</div>
-              <div>{getQuestionsArray(item)}</div>
-            </>
-          ))}
-        </ul>
+        <div>
+          {group}  
+       
+        </div>
       )}
     </div>
   )
